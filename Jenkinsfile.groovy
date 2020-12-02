@@ -1,14 +1,8 @@
 #!/usr/bin/env groovy
 
-/**
-        * Sample Jenkinsfile for Jenkins Pipeline       
- */
-
-#!/usr/bin/env groovy
-
 
 node {
-    stage ('Stage 1 Checkout Repository') {         
+    stage ('Stage 1 Checkout Repository') {
         checkout scm
         sh 'ls -l'
         if (env.BRANCH_NAME == 'master') {
@@ -27,4 +21,4 @@ node {
     stage ('Stage 3 Run') {
         sh './hello'
     }
-} 
+}
