@@ -1,0 +1,1 @@
+docker exec master-container cat /var/jenkins_home/secrets/initialAdminPassword

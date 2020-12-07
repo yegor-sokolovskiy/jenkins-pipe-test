@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  
+  jenkins-master:
+    build:
+      context: .
+      dockerfile: master-jenkins/Dockerfile
+    image: master-jenkins:latest
+    ports:
+      - "8081:8080"
+      - "50000:50000"
+    privileged: true
+    container_name: master-container
+    user: root
+    volumes:
+ #     - "/opt/jenkins-lib:/var/jenkins_home"
+      - "/opt/docker-lib:/var/lib/docker"
+ #     - "/root/docker-jenkins:/opt/docker-jenkins"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    
+  jenkins-slave:
+    build: ./slave-jenkins
+    image: slave-jenkins:latest
+    container_name: slave-container
+    
+  registry:
+    image: registry:2
+    container_name: registry
+    ports: 
+      - "5000:5000"
+    
