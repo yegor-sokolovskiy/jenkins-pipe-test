@@ -31,12 +31,15 @@ node {
         stage ('Stage 4 Run Unit Tests') {
             sh '''#!/usr/bin/env bash
                 cd ${WORKSPACE}/tests
+                SKIP=(1307 1330 1660)
                 TEST_NUM=$(ls ./unit | grep -E '^unit[[:digit:]]*$' | sed 's/unit\\(.*\\)/\\1/')
                 for TEST in $TEST_NUM
                 do
+                    [[ ${SKIP[@]} =~ $TEST ]] && continue || false
                     TEST_RESULTS=$(perl ./runtests.pl $TEST | grep -E "TESTDONE|TESTFAIL|TESTINFO")
                     echo "-----------Test Num $TEST---------------"
                     echo $TEST_RESULTS
+                    [[ $TEST_RESULTS == *"TESTFAIL"* ]] && exit 1 || false
                 done
             '''
         }
