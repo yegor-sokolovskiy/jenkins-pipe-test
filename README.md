@@ -17,8 +17,10 @@ Also, this job contain pre-steps for self-testing with [JenkinPipelineUnit](http
 
 For first time running is necessary to build `master-jenkins` image:
 * docker-compose build jenkins-master
+
 After image was built, run Jenkins instance:
 * docker-compose up -d jenkins-master
+
 Few minutes later it's possible to connect to Jenkins GUI via `http://dockerhost:8081`
 The job "Curl_n_Test" will appear. Run and enjoy!
 
