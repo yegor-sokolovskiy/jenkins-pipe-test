@@ -16,31 +16,31 @@ Also, this job contain pre-steps for self-testing with [JenkinPipelineUnit](http
 ### Files structure
 ```
 root
-|---- /autotest       - groovy scripts for testing with JenkinsPipelineUnit
+├──── /autotest       - groovy scripts for testing with JenkinsPipelineUnit
 |
-|---- /gradle/wrapper - gradle wrappers for compiling groovy autotest
+├──── /gradle/wrapper - gradle wrappers for compiling groovy autotest
 |
-|---- /master-jenkins - files for Jenkins instance container
+├──── /master-jenkins - files for Jenkins instance container
 |     |
-|     |---- /custom.groovy - scripts for Jenkins init
-|     |     |---- 05-add-docker-cloud.groovy - creates cloud provider, for future use
-|     |     |---- 10-addjob-curl-scm.groovy  - creates main job
+|     ├──── /custom.groovy - scripts for Jenkins init
+|     |     ├──── 05-add-docker-cloud.groovy - creates cloud provider, for future use
+|     |     └──── 10-addjob-curl-scm.groovy  - creates main job
 |     |
-|     |---- Dockerfile     - building container
-|     |---- plugins.txt    - plugins list to install during Jenkins init
-|     |---- *.sh           - helpers for container's stuff
+|     ├──── Dockerfile     - building container
+|     ├──── plugins.txt    - plugins list to install during Jenkins init
+|     └──── *.sh           - helpers for container's stuff
 |
-|---- /slave-jenkins  - files for Jenkins agent container  
+├──── /slave-jenkins  - files for Jenkins agent container  
 |     |
-|     |---- Dockerfile     - building container
-|     |---- *.sh           - helpers for container's stuff
+|     ├──── Dockerfile     - building container
+|     └──── *.sh           - helpers for container's stuff
 |
-|---- Jenkinsfile     - pipeliene for main job
-|---- docker-compose.yml - makes docker more friendly
-|---- init-script.sh  - for creating and storing skave-jenkins image
-|---- gradlew         - runner for autotest
-|---- gradle.bat      - graddle's stuff
-|---- settings.gradle - settings for gradle
+├──── Jenkinsfile     - pipeliene for main job
+├──── docker-compose.yml - makes docker more friendly
+├──── init-script.sh  - for creating and storing skave-jenkins image
+├──── gradlew         - runner for autotest
+├──── gradle.bat      - graddle's stuff
+└──── settings.gradle - settings for gradle
 ```
 
 ### How to use
