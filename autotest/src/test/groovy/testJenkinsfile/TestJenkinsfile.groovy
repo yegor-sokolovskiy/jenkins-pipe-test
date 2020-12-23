@@ -42,7 +42,7 @@ class TestJenkinsFile extends BasePipelineTest {
             println(t)
             println("!!!+++!!!")
             def script = runScript("../Jenkinsfile")
-            //script.node()
+            assertJobStatusSuccess()
             printCallStack()
         }
 }

@@ -14,7 +14,7 @@ node {
     docker.image('goshazzz/slave-jenkins').inside {
         stage ('Stage 1 Checkout Repository') {
             //deleteDir()
-            git 'https://github.com/curl/curl.git'
+            gi 'https://github.com/curl/curl.git'
             sh 'ls -l'
         }
         stage ('Stage 2 Prebuild') {
