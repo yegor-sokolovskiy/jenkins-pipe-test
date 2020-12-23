@@ -8,9 +8,9 @@ import jenkins.model.Jenkins
 
 // parameters
 def jobParameters = [
-  name:          'Curl-My_by_SCM',
-  description:   'Building and testing Curl-My sources according with Jenkinsfile from Curl-My repo, branch my-test. \
-Repo provided by SCM from GitHub https://github.com/yegor-sokolovskiy/curl-my.git with anonymous access',
+  name:          'Curl_n_Test',
+  description:   'Building and testing Curl sources from https://github.com/curl/curl according with Jenkinsfile from Jenkins-Pipe-Test repo, branch master. \
+Repo provided by SCM from GitHub https://github.com/yegor-sokolovskiy/jenkins-pipe-test.git with anonymous access',
   repository:     'https://github.com/yegor-sokolovskiy/jenkins-pipe-test.git',
   branch:         '*/master'
 ]
@@ -19,9 +19,8 @@ Repo provided by SCM from GitHub https://github.com/yegor-sokolovskiy/curl-my.gi
 def branchConfig                =   [new BranchSpec(jobParameters.branch)]
 def userConfig                  =   [new UserRemoteConfig(jobParameters.repository, null, null, jobParameters.credentialId)]
 def cleanBeforeCheckOutConfig   =   new CleanBeforeCheckout()
-def sparseCheckoutPathConfig    =   new SparseCheckoutPaths([new SparseCheckoutPath("Jenkinsfile")])
 def cloneConfig                 =   new CloneOption(true, true, null, 3)
-def extensionsConfig            =   [cleanBeforeCheckOutConfig,sparseCheckoutPathConfig,cloneConfig]
+def extensionsConfig            =   [cleanBeforeCheckOutConfig,cloneConfig]
 def scm                         =   new GitSCM(userConfig, branchConfig, false, [], null, null, extensionsConfig)
 
 // define SCM flow
