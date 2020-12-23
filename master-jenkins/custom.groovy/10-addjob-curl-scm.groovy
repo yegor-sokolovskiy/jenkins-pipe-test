@@ -11,10 +11,8 @@ def jobParameters = [
   name:          'Curl-My_by_SCM',
   description:   'Building and testing Curl-My sources according with Jenkinsfile from Curl-My repo, branch my-test. \
 Repo provided by SCM from GitHub https://github.com/yegor-sokolovskiy/curl-my.git with anonymous access',
-  //repository:    'https://github.com/yegor-sokolovskiy/curl-my.git',  
-  //branch:        '*/my-test'
   repository:     'https://github.com/yegor-sokolovskiy/jenkins-pipe-test.git',
-  branch:         '*/withgradle'
+  branch:         '*/master'
 ]
 
 // define repo configuration

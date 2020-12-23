@@ -6,4 +6,7 @@ Experemental project using testing practices for Jenkins Pipelines
 
 ### init-script.sh
 
-File `init-script.sh` is needed in case, when you want to use local registry of docker images
+File `init-script.sh` is needed in case, when you want to use local registry of docker images. Run it first.
+Otherwise image goshazzz/slave-jenkins:latest from hub.docker.com will be use.
+
+

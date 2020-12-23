@@ -43,7 +43,7 @@ def dockerCloudParameters = [
   dockerHostname:   '',
   name:             'docker2',
   readTimeout:      60,
-  serverUrl:        'tcp://192.168.100.31:4243',
+  serverUrl:        'tcp://127.0.0.1:4243',
   version:          ''
 ]
 

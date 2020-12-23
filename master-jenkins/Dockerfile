@@ -31,7 +31,6 @@ EXPOSE ${HTTP_PORT}
 EXPOSE ${AGENT_PORT}
 
 COPY master-jenkins/plugins.txt /usr/share/jenkins/ref/plugins.txt
-#RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
 RUN jenkins-plugin-cli -f /usr/share/jenkins/ref/plugins.txt
 
 COPY master-jenkins/custom.groovy/*.groovy /usr/share/jenkins/ref/init.groovy.d/
