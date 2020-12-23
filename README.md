@@ -14,7 +14,7 @@ This project use Docker for running Jenkins instance in `master-jenkins` contain
 Also, this job contain pre-steps for self-testing with [JenkinPipelineUnit](https://github.com/jenkinsci/JenkinsPipelineUnit) framework. All these steps described in [Jenkinsfile](https://github.com/yegor-sokolovskiy/jenkins-pipe-test/blob/master/Jenkinsfile) at root directory of the project.
 
 ### Files structure
-
+```
 root
 |---- /autotest       - groovy scripts for testing with JenkinsPipelineUnit
 |
@@ -41,7 +41,7 @@ root
 |---- gradlew         - runner for autotest
 |---- gradle.bat      - graddle's stuff
 |---- settings.gradle - settings for gradle
-
+```
 
 ### How to use
 
