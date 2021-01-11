@@ -33,7 +33,11 @@ node {
         }
         stage ('Stage 4 Run Unit Tests') {            
             def skipUnits = [1307, 1330, 1660]
-            def unitDir = new File("../tests/unit")            
+            String workDirName = "${WORKSPACE}"
+            println "workDirName is $workDirName"
+            String unitDirName  = workDirName + "/tests/unit"
+            println "unitDirName is $unitDirName"
+            def unitDir = new File(unitDirName)            
             def mapAllUnits = [:]
             unitDir.eachFileMatch (FileType.FILES, ~/^unit\d+$/) { f ->           
                 s = (f =~ /unit(\d+)/)[0]                
@@ -53,9 +57,13 @@ node {
         }
         stage ('Stage 5 Prepare Artifacts') {            
             String workDirName = "${WORKSPACE}"
-            String outDirName  = "/../out"            
+            println "workDirName is $workDirName"
+            String outDirName  = "/out"
+            println "outDirName is $outDirName"          
             String artifactsDirName = "root"
+            println "artifactsDirName is $artifactsDirName"
             String fullDirName = workDirName  + outDirName + "/" + artifactsDirName
+            println "fullDirName is $fullDirName"
             def fullDir = new File(fullDirName)
             fullDir.mkdir()
             sh "make install exec_prefix=$fullDirName prefix=$fullDirName"

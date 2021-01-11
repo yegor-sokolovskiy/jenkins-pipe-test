@@ -45,7 +45,7 @@ class TestJenkinsFile extends BasePipelineTest {
                     return 'TESTDONE'
                 }
             })  
-            binding.setVariable('WORKSPACE', System.getProperty("user.dir"))          
+            binding.setVariable('WORKSPACE', System.getProperty("user.dir").replace("autotest", ""))          
         } 
 
         @Before
