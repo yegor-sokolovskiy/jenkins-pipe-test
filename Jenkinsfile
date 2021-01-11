@@ -22,8 +22,12 @@ node {
             sh './configure --enable-debug'
         }
         stage ('Stage 3 Build') {           
-            sh 'make'            
-            def makefile = new File("../tests/Makefile") //we currently in ./autotest dir, thats why ../
+            sh 'make' 
+            String workDirName = "${WORKSPACE}"
+            println "workDirName is $workDirName"
+            String makefileName  = workDirName + "/tests/Makefile"
+            println "makefileName is $makefileName"           
+            def makefile = new File(makefileName) //we currently in ./autotest dir, thats why ../
             def maketext = makefile.text
             makefile.withWriter { w ->
             w << maketext.replace('TEST = srcdir=$(srcdir) $(PERL) $(PERLFLAGS) $(srcdir)/runtests.pl', 
