@@ -1,5 +1,5 @@
 #!/usr/bin/env groovy
-
+import groovy.io.FileType
 //properties([buildDiscarder(logRotator(daysToKeepStr: '7', numToKeepStr: '5'))])
 
 println "Run Jenkinsfile"
@@ -21,37 +21,45 @@ node {
             sh 'autoreconf -fi'
             sh './configure --enable-debug'
         }
-        stage ('Stage 3 Build') {
-            sh '''#!/usr/bin/env bash
-                make 
-                sed -i 's%^TEST = srcdir=$(srcdir) $(PERL) $(PERLFLAGS) $(srcdir)/runtests.pl%TEST = srcdir=$(srcdir) $(PERL) $(PERLFLAGS)%' ./tests/Makefile
-                make test
-            '''
+        stage ('Stage 3 Build') {           
+            sh 'make'            
+            def makefile = new File("../tests/Makefile") //we currently in ./autotest dir, thats why ../
+            def maketext = makefile.text
+            makefile.withWriter { w ->
+            w << maketext.replace('TEST = srcdir=$(srcdir) $(PERL) $(PERLFLAGS) $(srcdir)/runtests.pl', 
+                                  'TEST = srcdir=$(srcdir) $(PERL) $(PERLFLAGS) $(srcdir)')
+            }
+            sh 'make test'            
         }
-        stage ('Stage 4 Run Unit Tests') {
-            sh '''#!/usr/bin/env bash
-                cd ${WORKSPACE}/tests
-                SKIP=(1307 1330 1660)
-                TEST_NUM=$(ls ./unit | grep -E '^unit[[:digit:]]*$' | sed 's/unit\\(.*\\)/\\1/')
-                for TEST in $TEST_NUM
-                do
-                    [[ ${SKIP[@]} =~ $TEST ]] && continue || false
-                    TEST_RESULTS=$(perl ./runtests.pl $TEST | grep -E "TESTDONE|TESTFAIL|TESTINFO")
-                    echo "-----------Test Num $TEST---------------"
-                    echo $TEST_RESULTS
-                    [[ $TEST_RESULTS == *"TESTFAIL"* ]] && exit 1 || false
-                done
-            '''
+        stage ('Stage 4 Run Unit Tests') {            
+            def skipUnits = [1307, 1330, 1660]
+            def unitDir = new File("../tests/unit")            
+            def mapAllUnits = [:]
+            unitDir.eachFileMatch (FileType.FILES, ~/^unit\d+$/) { f ->           
+                s = (f =~ /unit(\d+)/)[0]                
+                mapAllUnits[s[1]] = s[0]
+            }
+            mapAllUnits.each { key, val ->               
+                if (!skipUnits.contains(key.toInteger())) {
+                    println "-----------Test Num $val---------------"
+                    out = sh(returnStdout: true, script: "perl ./tests/runtests.pl $val | grep -E \"TESTDONE|TESTFAIL|TESTINFO\"" )
+                    println out                    
+                    if (out && out.contains("TESTFAIL")) {
+                        sh "exit 1" 
+                    }           
+                }
+                
+            }
         }
-        stage ('Stage 5 Prepare Artifacts') {
-            sh '''#!/usr/bin/env bash
-                OUT_DIR="/out"
-                ARTIFACTS_DIR="root"
-                OUT_FULL_DIR=${WORKSPACE}${OUT_DIR}/${ARTIFACTS_DIR}
-                mkdir -p $OUT_FULL_DIR
-                make install exec_prefix=$OUT_FULL_DIR prefix=$OUT_FULL_DIR
-                tar -zcvf ${WORKSPACE}/artifacts.tar.gz -C ${WORKSPACE}${OUT_DIR}/ ${ARTIFACTS_DIR}
-            '''
+        stage ('Stage 5 Prepare Artifacts') {            
+            String workDirName = "${WORKSPACE}"
+            String outDirName  = "/../out"            
+            String artifactsDirName = "root"
+            String fullDirName = workDirName  + outDirName + "/" + artifactsDirName
+            def fullDir = new File(fullDirName)
+            fullDir.mkdir()
+            sh "make install exec_prefix=$fullDirName prefix=$fullDirName"
+            sh "tar -zcvf ${workDirName}/artifacts.tar.gz -C ${workDirName}${outDirName}/ ${artifactsDirName}"
             archiveArtifacts artifacts: '**/artifacts.tar.gz'
         }
     }
