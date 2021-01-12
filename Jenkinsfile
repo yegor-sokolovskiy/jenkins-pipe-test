@@ -29,6 +29,9 @@ node {
                 println f.path
             }
 
+            sh 'pwd'
+            sh 'ls -l ./tests'
+
             String workDirName = "${WORKSPACE}"
             println "workDirName is $workDirName"
             String makefileName  = workDirName + "/tests/Makefile"
