@@ -25,11 +25,11 @@ node {
             sh 'make' 
             String workDirName = "${WORKSPACE}"
             println "workDirName is $workDirName"
-            String makefileName  = workDirName + "/tests/Makefile"
+            String makefileName  = workDirName + "/tests/Makefile "
             println "makefileName is $makefileName"           
             def makefile = new File(makefileName) //we currently in ./autotest dir, thats why ../
             def maketext = makefile.text
-            makefile.withWriter { w ->
+            makefile.withWriter.call() { w ->
             w << maketext.replace('TEST = srcdir=$(srcdir) $(PERL) $(PERLFLAGS) $(srcdir)/runtests.pl', 
                                   'TEST = srcdir=$(srcdir) $(PERL) $(PERLFLAGS) $(srcdir)')
             }
