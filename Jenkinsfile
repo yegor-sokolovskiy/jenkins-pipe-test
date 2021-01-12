@@ -36,7 +36,7 @@ node {
             // }
             sh "cat ./tests/Makefile | grep \"TEST =\""
             maketext = readFile(file: "./tests/Makefile").replace('TEST = srcdir=$(srcdir) $(PERL) $(PERLFLAGS) $(srcdir)/runtests.pl', 
-                                   'TEST = srcdir=$(srcdir) $(PERL) $(PERLFLAGS) $(srcdir)')
+                                   'TEST = srcdir=$(srcdir) $(PERL) $(PERLFLAGS)')
             writeFile(file: "./tests/Makefile", text: maketext)
             sh "cat ./tests/Makefile | grep \"TEST =\""
             

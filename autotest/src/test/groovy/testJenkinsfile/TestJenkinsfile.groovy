@@ -79,7 +79,7 @@ class TestJenkinsFile extends BasePipelineTest {
 
             println("Stage N. Check temporary files")
             final String sn = FileUtils.readFileToString(createdFile)            
-            Assertions.assertThat(sn).isEqualTo('TEST = srcdir=$(srcdir) $(PERL) $(PERLFLAGS) $(srcdir) <<< JenkinsFile Auto Test')
+            Assertions.assertThat(sn).isEqualTo('TEST = srcdir=$(srcdir) $(PERL) $(PERLFLAGS) <<< JenkinsFile Auto Test')
 
             println("Stage Z. Delete temporary files")
             def testsDir = new File("../tests")
