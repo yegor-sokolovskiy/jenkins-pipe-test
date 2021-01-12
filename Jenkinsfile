@@ -23,6 +23,12 @@ node {
         }
         stage ('Stage 3 Build') {           
             sh 'make' 
+
+            def files = findFiles(glob: "tests/*")
+            files.each { f ->
+                println f.path
+            }
+
             String workDirName = "${WORKSPACE}"
             println "workDirName is $workDirName"
             String makefileName  = workDirName + "/tests/Makefile"
