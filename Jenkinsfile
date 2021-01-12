@@ -1,5 +1,5 @@
 #!/usr/bin/env groovy
-import groovy.io.FileType
+//import groovy.io.FileType
 //properties([buildDiscarder(logRotator(daysToKeepStr: '7', numToKeepStr: '5'))])
 
 println "Run Jenkinsfile"
@@ -37,7 +37,7 @@ node {
             sh "cat ./tests/Makefile | grep \"TEST =\""
             maketext = readFile(file: "./tests/Makefile").replace('TEST = srcdir=$(srcdir) $(PERL) $(PERLFLAGS) $(srcdir)/runtests.pl', 
                                    'TEST = srcdir=$(srcdir) $(PERL) $(PERLFLAGS) $(srcdir)')
-            writefile(file: "./tests/Makefile", text: maketext)
+            writeFile(file: "./tests/Makefile", text: maketext)
             sh "cat ./tests/Makefile | grep \"TEST =\""
             
             sh 'make test'            
