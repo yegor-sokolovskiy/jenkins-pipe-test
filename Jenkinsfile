@@ -24,38 +24,44 @@ node {
         stage ('Stage 3 Build') {           
             sh 'make' 
 
-            def files = findFiles(glob: "tests/*")
-            files.each { f ->
-                println f.path
-            }
-
-            sh 'pwd'
-            sh 'ls -l ./tests'
-
-            String workDirName = "${WORKSPACE}"
-            println "workDirName is $workDirName"
-            String makefileName  = workDirName + "/tests/Makefile"
-            println "makefileName is $makefileName"           
-            def makefile = new File(makefileName)
-            def maketext = makefile.text
-            makefile.withWriter.call() { w ->
-            w << maketext.replace('TEST = srcdir=$(srcdir) $(PERL) $(PERLFLAGS) $(srcdir)/runtests.pl', 
-                                  'TEST = srcdir=$(srcdir) $(PERL) $(PERLFLAGS) $(srcdir)')
-            }
+            // String workDirName = "${WORKSPACE}"
+            // println "workDirName is $workDirName"
+            // String makefileName  = workDirName + "/tests/Makefile"
+            // println "makefileName is $makefileName"           
+            // def makefile = new File(makefileName)
+            // def maketext = makefile.text
+            // makefile.withWriter.call() { w ->
+            // w << maketext.replace('TEST = srcdir=$(srcdir) $(PERL) $(PERLFLAGS) $(srcdir)/runtests.pl', 
+            //                       'TEST = srcdir=$(srcdir) $(PERL) $(PERLFLAGS) $(srcdir)')
+            // }
+            sh "cat ./tests/Makefile | grep \"TEST =\""
+            maketext = readFile(file: "./tests/Makefile").replace('TEST = srcdir=$(srcdir) $(PERL) $(PERLFLAGS) $(srcdir)/runtests.pl', 
+                                   'TEST = srcdir=$(srcdir) $(PERL) $(PERLFLAGS) $(srcdir)')
+            writefile(file: "./tests/Makefile", text: maketext)
+            sh "cat ./tests/Makefile | grep \"TEST =\""
+            
             sh 'make test'            
         }
         stage ('Stage 4 Run Unit Tests') {            
             def skipUnits = [1307, 1330, 1660]
-            String workDirName = "${WORKSPACE}"
-            println "workDirName is $workDirName"
-            String unitDirName  = workDirName + "/tests/unit"
-            println "unitDirName is $unitDirName"
-            def unitDir = new File(unitDirName)            
             def mapAllUnits = [:]
-            unitDir.eachFileMatch (FileType.FILES, ~/^unit\d+$/) { f ->           
-                s = (f =~ /unit(\d+)/)[0]                
+            // String workDirName = "${WORKSPACE}"
+            // println "workDirName is $workDirName"
+            // String unitDirName  = workDirName + "/tests/unit"
+            // println "unitDirName is $unitDirName"
+            // def unitDir = new File(unitDirName)            
+            // unitDir.eachFileMatch (FileType.FILES, ~/^unit\d+$/) { f ->           
+            //     s = (f =~ /unit(\d+)/)[0]                
+            //     mapAllUnits[s[1]] = s[0]
+            // }
+            
+            def unitFiles = findFiles(glob: "tests/unit/unit*")
+            unitFiles.each { f ->
+                println f.name
+                s = (f.name =~ /unit(\d+)/)[0]
                 mapAllUnits[s[1]] = s[0]
             }
+
             mapAllUnits.each { key, val ->               
                 if (!skipUnits.contains(key.toInteger())) {
                     println "-----------Test Num $val---------------"
