@@ -9,7 +9,7 @@ node {
         checkout scm
     }
     stage ('PreStep 1') {
-        sh "./gradlew test"
+        sh "./gradlew clean test"
     }    
     docker.image('goshazzz/slave-jenkins').inside {
         stage ('Stage 1 Checkout Repository') {
