@@ -16,9 +16,15 @@ import org.junit.Rule
 import org.apache.commons.io.FileUtils
 
 import java.time.*
+import groovy.io.FileType
 import com.lesfurets.jenkins.unit.*
 //import com.lesfurets.jenkins.unit.BasePipelineTest
 //import com.lesfurets.jenkins.unit.PipelineTestHelper
+
+class MockFindFiles {
+    String name
+    String path
+}
 
 class TestJenkinsFile extends BasePipelineTest {
 
@@ -44,7 +50,31 @@ class TestJenkinsFile extends BasePipelineTest {
                 if (cmd['script'].contains("runtests.pl")) {
                     return 'TESTDONE'
                 }
-            })  
+            })
+            helper.registerAllowedMethod("readFile", [Map.class], { arg->
+                if (arg['file'] == "./tests/Makefile") {
+                    File createdFile= new File("../tests/Makefile")
+                    return FileUtils.readFileToString(createdFile)
+                }
+            })
+            helper.registerAllowedMethod("writeFile", [Map.class], { arg->
+                if (arg['file'] == "./tests/Makefile") {
+                    File createdFile= new File("../tests/Makefile")
+                    FileUtils.writeStringToFile(createdFile, arg['text'])
+                }
+            })
+            helper.registerAllowedMethod("findFiles", [Map.class], { arg->
+                mapAllUnits = []
+                if (arg['glob'] == "tests/unit/unit*") {
+                    def unitDir = new File("../tests/unit/")  
+                    unitDir.eachFileMatch FileType.FILES, ~/.*unit.*/, { f->
+                        MockFindFiles uf = new MockFindFiles()
+                        uf.name = f
+                        mapAllUnits << uf
+                    }                                      
+                }
+                return mapAllUnits
+            })
             binding.setVariable('WORKSPACE', System.getProperty("user.dir").replace("autotest", ""))          
         } 
 
