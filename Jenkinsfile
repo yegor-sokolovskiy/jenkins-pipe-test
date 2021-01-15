@@ -66,7 +66,7 @@ node {
                 if (!skipUnits.contains(key.toInteger())) {
                     println "-----------Test Num $val---------------"
                     dir("tests") {
-                        out = sh(returnStdout: true, script: "perl runtests.pl $val | grep -E \"TESTDONE|TESTFAIL|TESTINFO\"" )
+                        out = sh(returnStdout: true, script: "perl runtests.pl $key | grep -E \"TESTDONE|TESTFAIL|TESTINFO\"" )
                     }
                     println out                    
                     if (out && out.contains("TESTFAIL")) {
