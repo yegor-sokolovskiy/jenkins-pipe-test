@@ -65,7 +65,9 @@ node {
             mapAllUnits.each { key, val ->               
                 if (!skipUnits.contains(key.toInteger())) {
                     println "-----------Test Num $val---------------"
-                    out = sh(returnStdout: true, script: "perl ./tests/runtests.pl $val | grep -E \"TESTDONE|TESTFAIL|TESTINFO\"" )
+                    dir("tests") {
+                        out = sh(returnStdout: true, script: "perl ./tests/runtests.pl $val | grep -E \"TESTDONE|TESTFAIL|TESTINFO\"" )
+                    }
                     println out                    
                     if (out && out.contains("TESTFAIL")) {
                         sh "exit 1" 
